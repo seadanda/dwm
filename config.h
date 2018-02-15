@@ -5,6 +5,10 @@
 /* appearance */
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int systraypinning = 0;   /* 0 follows active monitor */
+static const unsigned int systrayspacing = 2;
+static const int systraypinningfailfirst = 1;   /* 1 or 0 on or off */
+static const int showsystray        = 1;        /* 0 no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "noto:size=10" };
