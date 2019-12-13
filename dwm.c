@@ -814,17 +814,19 @@ drawbar(Monitor *m)
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
+	char *dtext;
+	char *status;
 
-    if(showsystray && m == systraytomon(m)) {
-        stw = getsystraywidth();
-    }
+	dtext = strdup(stext);
+	status = strsep(&dtext, ";");
+
+	if(showsystray && m == systraytomon(m))
+		stw = getsystraywidth();
 
 	/* draw status first so it can be overdrawn by tags later */
-	if (m == selmon) { /* status is only drawn on selected monitor */
-		drw_setscheme(drw, scheme[SchemeNorm]);
-		sw = TEXTW(stext) - lrpad / 2 + 2; /* 2px right padding */
-		drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2 - 2, stext, 0);
-	}
+	drw_setscheme(drw, scheme[SchemeNorm]);
+	sw = TEXTW(status) - lrpad / 2 + 2; /* 2px right padding */
+	drw_text(drw, m->ww - sw - stw, 0, sw, bh, lrpad / 2 - 2, status, 0);
 
     resizebarwin(m);
 	for (c = m->clients; c; c = c->next) {
@@ -848,15 +850,8 @@ drawbar(Monitor *m)
 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
 
 	if ((w = m->ww - sw - stw - x) > bh) {
-		if (m->sel) {
-			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
-			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
-			if (m->sel->isfloating)
-				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
-		} else {
-			drw_setscheme(drw, scheme[SchemeNorm]);
-			drw_rect(drw, x, 0, w, bh, 1, 1);
-		}
+        int mid = (m->ww - TEXTW(dtext)) / 2 - x;
+		drw_text(drw, x, 0, w, bh, mid, dtext, 0);
 	}
 	drw_map(drw, m->barwin, 0, 0, m->ww - stw, bh);
 }
